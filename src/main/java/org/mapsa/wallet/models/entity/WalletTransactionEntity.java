@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @ToString
-public class WalletTransactionEntity {
+public class WalletTransactionEntity extends AbstractEntity {
     private Date date;
 
     private Long amount;

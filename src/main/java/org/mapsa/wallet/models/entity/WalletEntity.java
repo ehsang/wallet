@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "wallet")
-public class WalletEntity {
+public class WalletEntity extends AbstractEntity {
 
     @Column(nullable = false)
     private Long balance;
