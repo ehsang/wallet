@@ -80,6 +80,7 @@ public class WalletServiceImpl implements WalletService {
         //Record the transaction
         WalletTransactionEntity transaction = new WalletTransactionEntity();
         transaction.setAmount(amount);
+        transaction.setWalletEntity(updatedWallet);
 
         //transaction.setWalletEntity(updateWallet);
         walletTransactionRepository.save(transaction);
@@ -95,7 +96,7 @@ public class WalletServiceImpl implements WalletService {
 
 
     @Override
-    public void withdrawFromWallet(String walletId, Long amount) {
+    public WalletDto withdrawFromWallet(String walletId, Long amount) {
         if (amount <=0){
             throw new IllegalArgumentException("Amount must be positive value");
         }
@@ -107,8 +108,26 @@ public class WalletServiceImpl implements WalletService {
         if (walletEntity.getBalance() < amount){
             throw new IllegalArgumentException("Insufficient funds in the wallet");
         }
+        //perform the withdrawal operation
+       // WalletEntity walletEntity = wallet.get();
         walletEntity.setBalance(walletEntity.getBalance() - amount);
-        walletRepository.save(walletEntity);
+        WalletEntity updatedWallet = walletRepository.save(walletEntity);
+
+
+        //Record the transaction
+        WalletTransactionEntity transaction = new WalletTransactionEntity();
+        transaction.setAmount(amount);
+        transaction.setWalletEntity(updatedWallet);
+
+        //transaction.setWalletEntity(updateWallet);
+        walletTransactionRepository.save(transaction);
+
+        //Convert the updated wallet entity to DTO
+        WalletDto walletDto = new WalletDto();
+        walletDto.setId(updatedWallet.getId());
+        walletDto.setBalance(updatedWallet.getBalance());
+
+        return walletDto;
     }
 
     @Override

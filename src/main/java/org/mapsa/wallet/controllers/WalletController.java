@@ -76,9 +76,9 @@ public class WalletController {
     }
 
     @PostMapping("/{walletId}/withdraw")
-    public ResponseEntity<Void> withdrawFromWallet(@PathVariable("walletId") String walletId,
-                                                   @RequestParam("amount") Long amount) {
-        walletService.withdrawFromWallet(walletId, amount);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<WalletDto> withdrawFromWallet(@PathVariable("walletId") String walletId,
+                                                        @RequestParam("amount") Long amount) {
+        WalletDto updatedWallet = walletService.withdrawFromWallet(walletId, amount);
+        return ResponseEntity.ok(updatedWallet);
     }
 }

@@ -16,5 +16,5 @@ public interface WalletService {
 
     WalletDto depositToWallet(String walletId, Long amount);
 
-    void withdrawFromWallet(String walletId, Long amount);
+    WalletDto withdrawFromWallet(String walletId, Long amount);
 }
