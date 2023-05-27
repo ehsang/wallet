@@ -14,20 +14,20 @@ public class WalletController {
 
     private final WalletService walletService;
 
-    public WalletController (WalletService walletService){
+    public WalletController(WalletService walletService) {
         this.walletService = walletService;
     }
 
     @PostMapping
-    public ResponseEntity<WalletEntity> createWallet(@RequestBody WalletEntity wallet){
+    public ResponseEntity<WalletEntity> createWallet(@RequestBody WalletEntity wallet) {
         WalletEntity createdWallet = walletService.createWallet(wallet);
         return ResponseEntity.ok(createdWallet);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WalletEntity> getWalletById (@PathVariable("id") String id){
+    public ResponseEntity<WalletEntity> getWalletById(@PathVariable("id") String id) {
         WalletEntity wallet = walletService.getWalletById(id);
-        if (wallet != null){
+        if (wallet != null) {
             return ResponseEntity.ok(wallet);
         } else {
             return ResponseEntity.notFound().build();
@@ -35,16 +35,16 @@ public class WalletController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WalletEntity>> getAllWallets(){
+    public ResponseEntity<List<WalletEntity>> getAllWallets() {
         List<WalletEntity> walletEntityList = walletService.getAllWallets();
         return ResponseEntity.ok(walletEntityList);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WalletEntity> updateWallet (@PathVariable("id") String id,
-                                                      @RequestBody WalletEntity wallet){
+    public ResponseEntity<WalletEntity> updateWallet(@PathVariable("id") String id,
+                                                     @RequestBody WalletEntity wallet) {
         WalletEntity existingWallet = walletService.getWalletById(id);
-        if (existingWallet != null){
+        if (existingWallet != null) {
             wallet.setId(id);
             walletService.updateWallet(wallet);
             return ResponseEntity.ok(wallet);
@@ -54,13 +54,27 @@ public class WalletController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWallet(@PathVariable("id") String id){
+    public ResponseEntity<Void> deleteWallet(@PathVariable("id") String id) {
         WalletEntity existingWallet = walletService.getWalletById(id);
-        if (existingWallet != null){
+        if (existingWallet != null) {
             walletService.deleteWallet(id);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/{walletId}/deposit")
+    public ResponseEntity<Void> depositToWallet(@PathVariable("walletId") String walletId,
+                                                @RequestParam("amount") Long amount) {
+        walletService.depositToWallet(walletId, amount);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{walletId}/withdraw")
+    public ResponseEntity<Void> withdrawFromWallet(@PathVariable("walletId") String walletId,
+                                                   @RequestParam("amount") Long amount) {
+        walletService.withdrawFromWallet(walletId, amount);
+        return ResponseEntity.ok().build();
     }
 }

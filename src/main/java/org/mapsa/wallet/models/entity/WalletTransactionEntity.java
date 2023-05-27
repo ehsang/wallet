@@ -12,6 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @ToString
+@Table(name = "wallet_transaction")
 public class WalletTransactionEntity extends AbstractEntity {
     private Date date;
 
