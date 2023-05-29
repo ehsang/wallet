@@ -1,5 +1,6 @@
 package org.mapsa.wallet.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class WalletTransactionEntity extends AbstractEntity {
     private Long amount;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JsonBackReference
     private WalletEntity walletEntity;
 
     @Column(unique = true)
