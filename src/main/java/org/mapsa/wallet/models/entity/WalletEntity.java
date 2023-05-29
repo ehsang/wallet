@@ -24,6 +24,6 @@ public class WalletEntity extends AbstractEntity {
     //@JsonIgnore --> to avoid circular dependency when a wallet entity has a list of transactions
     @OneToMany(mappedBy = "walletEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private List<WalletTransactionEntity> walletTransactionEntities;
+    private List<WalletTransactionEntity> transactions;
 
 }

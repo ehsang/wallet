@@ -14,6 +14,8 @@ import java.util.Date;
 public class WalletTransactionDto extends AbstractDto {
     private Date date;
     private Long amount;
+
+    // test without walletDto
     private WalletDto walletDto;
-    //private String trackingId;
+    private String trackingId;
 }
