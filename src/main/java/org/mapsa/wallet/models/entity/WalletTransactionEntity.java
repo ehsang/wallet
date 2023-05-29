@@ -20,7 +20,6 @@ public class WalletTransactionEntity extends AbstractEntity {
     private Long amount;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JsonBackReference
     private WalletEntity walletEntity;
 
     @Column(unique = true)
