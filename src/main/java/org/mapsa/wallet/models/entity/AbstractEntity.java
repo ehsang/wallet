@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.util.Date;
 
 //The @MappedSuperclass annotation is a JPA (Java Persistence API) annotation that is used to mark a class as a superclass for entity classes. When applied at the class level, the @MappedSuperclass annotation indicates that
@@ -24,7 +25,7 @@ import java.util.Date;
 //In this example, the AbstractEntity class is annotated with @EntityListeners(AuditingEntityListener.class) at the @MappedSuperclass level.
 // This ensures that any entity inheriting from BaseEntity will have the AuditingEntityListener associated by default.
 @EntityListeners(AuditingEntityListener.class)
-public class AbstractEntity {
+public class AbstractEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

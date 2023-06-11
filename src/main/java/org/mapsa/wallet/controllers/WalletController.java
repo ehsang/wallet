@@ -1,9 +1,10 @@
 package org.mapsa.wallet.controllers;
 
+import org.mapsa.wallet.converters.WalletConverter;
 import org.mapsa.wallet.models.dto.WalletDto;
+import org.mapsa.wallet.models.dto.WalletTransactionDto;
 import org.mapsa.wallet.models.entity.WalletEntity;
 import org.mapsa.wallet.services.interfaces.WalletService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +15,11 @@ import java.util.List;
 public class WalletController {
 
     private final WalletService walletService;
+    private final WalletConverter walletConverter;
 
-    public WalletController(WalletService walletService) {
+    public WalletController(WalletService walletService, WalletConverter walletConverter) {
         this.walletService = walletService;
+        this.walletConverter = walletConverter;
     }
 
     @PostMapping
@@ -26,13 +29,11 @@ public class WalletController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WalletEntity> getWalletById(@PathVariable("id") String id) {
+    public WalletDto getWalletById(@PathVariable("id") String id) {
         WalletEntity wallet = walletService.getWalletById(id);
-        if (wallet != null) {
-            return ResponseEntity.ok(wallet);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        WalletDto walletDto = walletConverter.convertToDto(wallet);
+
+        return walletDto;
     }
 
     @GetMapping
@@ -66,19 +67,18 @@ public class WalletController {
     }
 
     //End point for depositing  to a wallet
-    @PostMapping("/{walletId}/deposit")
-    public ResponseEntity<WalletDto> depositToWallet(@PathVariable("walletId") String walletId,
-                                                     @RequestParam("amount") Long amount) {
+    @PostMapping("/deposit")
+    public ResponseEntity<WalletDto> depositToWallet(@RequestBody WalletTransactionDto walletTransactionDto) {
         //walletService.depositToWallet(walletId, amount);
         //return ResponseEntity.ok().build();
-        WalletDto updatedWallet = walletService.depositToWallet(walletId, amount);
+        WalletDto updatedWallet = walletService.depositToWallet(walletTransactionDto.getId(), walletTransactionDto.getAmount());
         return ResponseEntity.ok(updatedWallet);
     }
 
-    @PostMapping("/{walletId}/withdraw")
-    public ResponseEntity<WalletDto> withdrawFromWallet(@PathVariable("walletId") String walletId,
-                                                        @RequestParam("amount") Long amount) {
-        WalletDto updatedWallet = walletService.withdrawFromWallet(walletId, amount);
+    //End point for withdrawing from a wallet
+    @PostMapping("/withdraw")
+    public ResponseEntity<WalletDto> withdrawFromWallet(@RequestBody WalletTransactionDto walletTransactionDto) {
+        WalletDto updatedWallet = walletService.withdrawFromWallet(walletTransactionDto.getId(), walletTransactionDto.getAmount());
         return ResponseEntity.ok(updatedWallet);
     }
 }
