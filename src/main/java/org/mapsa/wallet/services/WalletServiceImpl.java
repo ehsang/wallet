@@ -1,11 +1,14 @@
 package org.mapsa.wallet.services;
 
+import org.mapsa.wallet.configuration.redis.RedisCacheConfig;
 import org.mapsa.wallet.models.dto.WalletDto;
 import org.mapsa.wallet.models.entity.WalletEntity;
 import org.mapsa.wallet.models.entity.WalletTransactionEntity;
 import org.mapsa.wallet.repositories.WalletRepository;
 import org.mapsa.wallet.repositories.WalletTransactionRepository;
 import org.mapsa.wallet.services.interfaces.WalletService;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +21,16 @@ public class WalletServiceImpl implements WalletService {
     private final WalletRepository walletRepository;
     private final WalletTransactionRepository walletTransactionRepository;
 
-    public WalletServiceImpl(WalletRepository walletRepository, WalletTransactionRepository walletTransactionRepository) {
+    //it's not used yet, supposed to make the application understand that using
+    // Redis as Caching technique we don't have to explicitly tell our entities they
+    // should be serializable to enable caching, but so far it's not working
+    private final RedisCacheConfig redisCacheConfig;
+
+    public WalletServiceImpl(WalletRepository walletRepository, WalletTransactionRepository walletTransactionRepository
+            , RedisCacheConfig redisCacheConfig) {
         this.walletRepository = walletRepository;
         this.walletTransactionRepository = walletTransactionRepository;
+        this.redisCacheConfig = redisCacheConfig;
     }
 
     @Override
@@ -29,6 +39,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    @Cacheable(value = "walletInfoCache", key = "#id")
     public WalletEntity getWalletById(String id) {
         if (walletRepository.existsById(id)) {
             return walletRepository.findById(id).orElse(null);
